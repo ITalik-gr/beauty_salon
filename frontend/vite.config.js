@@ -1,30 +1,39 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import tailwindcss from "@tailwindcss/vite";
-import path from "path";
+import tailwind from "@tailwindcss/vite";
+import { fileURLToPath } from "node:url";
+import { dirname, resolve } from "node:path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 export default defineConfig({
   plugins: [
-    tailwindcss(),
+    tailwind(),
     react(),
   ],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      "@": resolve(__dirname, "src"),
+      "@images": resolve(__dirname, "src/assets/images"),
     },
   },
   server: {
+    host: true,
     port: 5173,
     open: false,
-    host: true, 
+    proxy: {
+      "/api": {
+        target: "http://localhost:5000",
+        changeOrigin: true,
+        secure: false,
+      },
+    },
   },
   build: {
-    sourcemap: true, 
+    sourcemap: true,
   },
   css: {
     devSourcemap: true,
-  },
-  optimizeDeps: {
-    include: ["react", "react-dom"],
   },
 });

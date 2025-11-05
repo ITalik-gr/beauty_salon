@@ -1,0 +1,21 @@
+.btn {
+  border: 1px solid #252525;
+  border-radius: 4px;
+  padding: 10px 24px;
+  background: #FFF;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: fit-content;
+
+  font-weight: 500;
+  font-size: 14px;
+  text-transform: capitalize;
+  color: #383838; 
+  transition: .3s all;
+  &:hover {
+    background: #252525;
+    color: #FFF;
+    border-color: #FFF;
+  }
+}
