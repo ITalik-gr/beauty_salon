@@ -2,18 +2,28 @@
 
 @import './button.scss';
 @import './cards/serviceCard.scss';
+@import './cards/historyItem.scss';
 
 @import './sections/first.scss';
 @import './sections/services.scss';
 
+@import './pages/service-page.scss';
+@import './pages/services-page.scss';
+@import './pages/account-page.scss';
+@import './pages/auth-page.scss';
 
 body {
   font-family: "Poppins", sans-serif;
+  background: #f9fafc;
 }
 
 .cont {
   max-width: 1216px;
   margin: 0 auto;
+  padding: 0 20px;
+  @media (max-width: 1024px) {
+    padding: 0 16px;
+  }
 }
 
 .swiper-buttons {
@@ -36,8 +46,8 @@ body {
   cursor: pointer;
   position: relative;
   transition: background-color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
-/* 
-  &::before {
+
+  /* &::before {
     content: "";
     width: 8px;
     height: 8px;
@@ -47,10 +57,13 @@ body {
     transition: transform 0.2s ease;
   } */
 
+  /* &.swiper-button-prev::before {
+    transform: rotate(-135deg);
+  } */
+
   &.swiper-button-prev svg {
     transform: rotate(-180deg);
   }
-
   &:hover {
     border-color: #111;
     background-color: #f7f7f7;
@@ -60,4 +73,47 @@ body {
     opacity: 0.4;
     pointer-events: none;
   }
+}
+
+// Inputs
+
+.meta-input {
+  label {
+    font-weight: 400;
+    font-size: 12px;
+    text-transform: capitalize;
+    color: #b0a6bd;
+    margin-bottom: 2px;
+  }
+  input {
+    font-weight: 400;
+    font-size: 16px;
+    color: #383838;
+    width: 100%;
+    background-color: #FFF;
+    border: 1.20px solid #dfe1e3;
+    border-radius: 4px;
+    padding: 10px;
+    &:focus {
+      outline: none;
+    }
+    &::placeholder {
+      color: rgba(56, 56, 56, 0.8);
+    }
+  }
+}
+
+
+// Typography
+
+.heading-24 {
+  font-weight: 600;
+  font-size: 24px;
+  color: #383838;
+}
+
+.heading-20 {
+  font-weight: 500;
+  font-size: 20px;
+  color: #383838;
 }

@@ -1,0 +1,92 @@
+.auth-page {
+  padding: 60px 0;
+
+  &__wrap {
+    display: flex;
+    justify-content: center;
+  }
+
+  &__card {
+    width: 100%;
+    max-width: 460px;
+    padding: 32px 28px;
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+  }
+
+  &__title {
+    margin-bottom: 6px;
+  }
+
+  &__subtitle {
+    margin-bottom: 22px;
+    font-size: 14px;
+    color: #777;
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+  }
+
+  &__checkbox {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    font-size: 14px;
+    color: #555;
+
+    input {
+      margin-top: 3px;
+    }
+  }
+
+  &__btn {
+    width: 100%;
+    margin-top: 8px;
+  }
+
+  &__footer {
+    margin-top: 10px;
+    font-size: 14px;
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+  }
+
+  &__link {
+    border: none;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+    color: #7c5cff;
+    font-size: 14px;
+
+    &--small {
+      font-size: 13px;
+    }
+
+    &--inline {
+      text-decoration: underline;
+    }
+
+    &:hover {
+      color: #6340ff;
+    }
+  }
+}

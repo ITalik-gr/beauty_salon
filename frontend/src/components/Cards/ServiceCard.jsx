@@ -2,9 +2,11 @@
 
 function ServiceCard({cardClass, card}) {
 
+  const id = '1';
+
 
   return (
-    <a href="#" className={`service-card ${cardClass}`}>
+    <a href={`/services/${id}`} className={`service-card ${cardClass}`}>
       <div className="service-card__image">
         <img src={card.image} alt={card.title} />
       </div>

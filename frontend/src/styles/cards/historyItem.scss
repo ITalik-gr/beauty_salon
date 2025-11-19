@@ -1,0 +1,97 @@
+.history-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 22px;
+  border: 1px solid #e7e7e7;
+  border-radius: 14px;
+  background: #fff;
+  transition: 0.25s ease;
+  &:not(:last-child) {
+    margin-bottom: 12px;
+  }
+  &:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  }
+
+  &__img-wrap {
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  &__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__info {
+    flex: 1;
+  }
+
+  &__title {
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  &__meta {
+    display: flex;
+    gap: 14px;
+    font-size: 14px;
+    color: #777;
+  }
+
+  &__date {
+    opacity: 0.8;
+  }
+
+  &__right {
+    text-align: right;
+  }
+
+  &__price {
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  &__status {
+    font-size: 14px;
+    padding: 2px 8px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    display: inline-block;
+
+    &.status-completed {
+      background: #e4f6ea;
+      color: #2e9d55;
+    }
+
+    &.status-pending {
+      background: #fff6e5;
+      color: #c88a1d;
+    }
+
+    &.status-canceled {
+      background: #ffe5e5;
+      color: #d84242;
+    }
+  }
+
+  &__btn {
+    font-size: 14px;
+    color: #6845ff;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 0;
+
+    &:hover {
+      color: #4f2ee8;
+    }
+  }
+}

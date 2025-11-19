@@ -79,8 +79,8 @@ function HomePage() {
                 1024: { slidesPerView: 3, spaceBetween: 24 },
               }}
               navigation={{
-                nextEl: "services-sec .swiper-button-next",
-                prevEl: "services-sec .swiper-button-prev",
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
               }}
               watchOverflow
             >
