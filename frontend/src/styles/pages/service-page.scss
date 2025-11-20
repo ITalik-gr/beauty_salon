@@ -34,7 +34,12 @@
       width: var(--size);
       height: var(--size);
       border-radius: 100%;
+      font-size: 20px;
       overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #9ca3af;
       img {
         width: 100%;
         height: 100%;
@@ -63,4 +68,136 @@
     
   }
 
+
+&__schedule {
+  margin-top: 32px;
+  padding: 16px 0;
+  margin-bottom: 48px;
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  &::-webkit-scrollbar {
+    height: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #e5e7eb;
+    border-radius: 999px;
+  }
+  }
+
+  &__schedule-day {
+    flex: 0 0 auto;
+    min-width: 180px;
+    padding: 12px 12px 14px;
+    border-radius: 16px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 2px 4px rgba(15, 23, 42, 0.06);
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    &.is-today {
+      border-color: #60a5fa;
+      background: #eff6ff;
+      box-shadow: 0 0 0 2px #bfdbfe inset;
+    }
+  }
+
+  &__schedule-day-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+
+  &__schedule-day-label {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #111827;
+  }
+
+  &__schedule-day-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    line-height: 1.1;
+
+    span:first-child {
+      font-size: 16px;
+      font-weight: 600;
+      color: #111827;
+    }
+
+    span:last-child {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+  }
+
+  &__schedule-slots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  &__slot {
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: 13px;
+    line-height: 1;
+    border: 1px solid transparent;
+    background: transparent;
+    cursor: pointer;
+    transition:
+      background-color 0.15s ease,
+      color 0.15s ease,
+      border-color 0.15s ease,
+      transform 0.1s ease;
+
+    &.is-free {
+      border-color: #6ee7b7;
+      background: #ecfdf5;
+      color: #047857;
+
+      &:hover {
+        background: #bbf7d0;
+        border-color: #34d399;
+        transform: translateY(-1px);
+      }
+    }
+
+    &.is-busy {
+      border-color: #e5e7eb;
+      background: #f9fafb;
+      color: #9ca3af;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+
+    &.is-selected {
+      background: #2563eb;
+      border-color: #1d4ed8;
+      color: white;
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.3);
+    }
+  }
+
+  @media (max-width: 768px) {
+    &__schedule {
+      gap: 12px;
+    }
+
+    &__schedule-day {
+      min-width: 70%;
+    }
+  }
 }

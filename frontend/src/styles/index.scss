@@ -12,6 +12,10 @@
 @import './pages/account-page.scss';
 @import './pages/auth-page.scss';
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
   font-family: "Poppins", sans-serif;
   background: #f9fafc;

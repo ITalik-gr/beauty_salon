@@ -49,6 +49,7 @@ model Service {
   durationMin Int      @default(60)   // тривалість послуги в хвилинах
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
+  imageUrl    String?
 
   categoryId  Int?
   category    ServiceCategory? @relation(fields: [categoryId], references: [id])

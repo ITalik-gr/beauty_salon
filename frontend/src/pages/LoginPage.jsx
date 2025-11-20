@@ -1,7 +1,12 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
 
 function LoginPage() {
+  const navigate = useNavigate();
+  const { login } = useAuth();
+  const [error, setError] = useState("");
+
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -14,10 +19,17 @@ function LoginPage() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: виклик API авторизації
-    console.log("Login data:", form);
+    setError("");
+    try {
+      const res = await login(form.email, form.password);
+      if(res) {
+        navigate('/')
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || "Помилка логіну");
+    }
   };
 
   return (
@@ -29,6 +41,7 @@ function LoginPage() {
             <p className="auth-page__subtitle">
               Login to manage your bookings and profile.
             </p>
+            
 
             <form className="auth-page__form" onSubmit={handleSubmit}>
               <div className="meta-input">
@@ -57,21 +70,9 @@ function LoginPage() {
                 />
               </div>
 
-              <div className="auth-page__row">
-                <label className="auth-page__checkbox">
-                  <input type="checkbox" />
-                  <span>Remember me</span>
-                </label>
+              {error && <div className="text-red-600 text-base">{error}</div>}
 
-                <button
-                  type="button"
-                  className="auth-page__link auth-page__link--small"
-                >
-                  Forgot password?
-                </button>
-              </div>
-
-              <button type="submit" className="auth-page__btn main-btn">
+              <button type="submit" className="auth-page__btn btn">
                 Sign in
               </button>
 

@@ -43,7 +43,14 @@ export async function getServicesAdmin(req, res) {
 
 export async function createService(req, res) {
   try {
-    const { name, description, price, durationMin, categoryId } = req.body;
+    const {
+      name,
+      description,
+      price,
+      durationMin,
+      categoryId,
+      imageUrl,       
+    } = req.body;
 
     if (!name || price === undefined) {
       return res
@@ -66,6 +73,7 @@ export async function createService(req, res) {
       price: priceNumber,
       durationMin: durationNumber,
       categoryId,
+      imageUrl,
     });
 
     res.status(201).json(service);
@@ -82,8 +90,15 @@ export async function updateService(req, res) {
       return res.status(400).json({ message: "Некоректний ID послуги" });
     }
 
-    const { name, description, price, durationMin, isActive, categoryId } =
-      req.body;
+    const {
+      name,
+      description,
+      price,
+      durationMin,
+      isActive,
+      categoryId,
+      imageUrl,
+    } = req.body;
 
     const data = {};
 
@@ -113,15 +128,12 @@ export async function updateService(req, res) {
     if (categoryId !== undefined) {
       data.categoryId = categoryId;
     }
-
-    try {
-      const service = await servicesService.updateService(id, data);
-      
-      res.json(service);
-    } catch (error) {
-      res.status(500).json({ message: `Server error - ${error}` });
+    if (imageUrl !== undefined) {
+      data.imageUrl = imageUrl; 
     }
-    
+
+    const service = await servicesService.updateService(id, data);
+    res.json(service);
   } catch (err) {
     console.error("Error updateService:", err);
     res.status(500).json({ message: "Server error" });

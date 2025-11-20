@@ -1,9 +1,14 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
 
 function RegisterPage() {
+  const navigate = useNavigate();
+  const { register } = useAuth();
+  const [error, setError] = useState("");
+
   const [form, setForm] = useState({
-    firstName: "",
+    name: "",
     lastName: "",
     email: "",
     password: "",
@@ -17,10 +22,19 @@ function RegisterPage() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: виклик API реєстрації
-    console.log("Register data:", form);
+    setError("");
+    try {
+      // email, password, name, lastName
+      
+      const res = await register(form);
+      if(res) {
+        navigate('/profile')
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || "Помилка логіну");
+    }
   };
 
   return (
@@ -40,9 +54,9 @@ function RegisterPage() {
                   <input
                     id="regFirstName"
                     type="text"
-                    name="firstName"
+                    name="name"
                     placeholder="Your first name"
-                    value={form.firstName}
+                    value={form.name}
                     onChange={handleChange}
                     required
                   />
@@ -110,7 +124,9 @@ function RegisterPage() {
                 </span>
               </label>
 
-              <button type="submit" className="auth-page__btn main-btn">
+              {error && <div className="text-red-600 text-base">{error}</div>}
+
+              <button type="submit" className="auth-page__btn btn">
                 Sign up
               </button>
 

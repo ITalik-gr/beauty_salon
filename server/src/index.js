@@ -31,6 +31,8 @@ app.use("/api/masters", mastersRoutes);
 app.use("/api/workdays", workdaysRoutes);
 app.use("/api/appointments", appointmentsRoutes);
 
+app.use("/uploads", express.static("uploads"));
+
 
 app.listen(PORT, () =>
   console.log(`🚀 Server running on http://localhost:${PORT}`)

@@ -35,37 +35,57 @@ export function getAllServicesAdmin() {
 
 // Створити послугу (ADMIN)
 export function createService(data) {
-  const { name, description, price, durationMin, categoryId } = data;
+  const {
+    name,
+    description,
+    price,
+    durationMin,
+    categoryId,
+    imageUrl
+  } = data;
 
   return prisma.service.create({
     data: {
       name,
-      description,
-      price,
-      durationMin: durationMin ?? 60,
-      categoryId: categoryId ?? null,
+      description: description ?? null,
+      price: Number(price),
+      durationMin: durationMin ? Number(durationMin) : 60,
+      categoryId: categoryId ? Number(categoryId) : null,
+      imageUrl: imageUrl ?? null,
     },
   });
 }
 
 // Оновити послугу (ADMIN)
 export async function updateService(id, data) {
-  const existing = await prisma.service.findUnique({ where: { id } });
+  const existing = await prisma.service.findUnique({
+    where: { id: Number(id) }
+  });
+
   if (!existing) {
     throw new Error("Service not found");
   }
 
-  const { name, description, price, durationMin, isActive, categoryId } = data;
+  const {
+    name,
+    description,
+    price,
+    durationMin,
+    isActive,
+    categoryId,
+    imageUrl
+  } = data;
 
   return prisma.service.update({
-    where: { id },
+    where: { id: Number(id) },
     data: {
-      ...(name && { name }),
+      ...(name !== undefined && { name }),
       ...(description !== undefined && { description }),
-      ...(price !== undefined && { price }),
-      ...(durationMin !== undefined && { durationMin }),
+      ...(price !== undefined && { price: Number(price) }),
+      ...(durationMin !== undefined && { durationMin: Number(durationMin) }),
       ...(typeof isActive === "boolean" && { isActive }),
-      ...(categoryId !== undefined && { categoryId }),
+      ...(categoryId !== undefined && { categoryId: categoryId ? Number(categoryId) : null }),
+      ...(imageUrl !== undefined && { imageUrl }),
     },
   });
 }
