@@ -4,13 +4,119 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url   = env("DATABASE_URL")
+  url      = env("DATABASE_URL")
 }
 
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum AppointmentStatus {
+  PENDING     
+  CONFIRMED   
+  CANCELLED    
+  COMPLETED 
+}
+
+
 model User {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  passwordHash String
+  name         String
+  lastName     String
+  role         Role     @default(USER)
+  createdAt    DateTime @default(now())
+
+  appointments Appointment[] // всі бронювання цього юзера
+}
+
+/* Сервіси */
+
+model ServiceCategory {
+  id        Int       @id @default(autoincrement())
+  name      String
+  services  Service[]
+}
+
+model Service {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  price       Int
+  durationMin Int      @default(60)   // тривалість послуги в хвилинах
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  categoryId  Int?
+  category    ServiceCategory? @relation(fields: [categoryId], references: [id])
+
+  appointments Appointment[]
+  masters      MasterService[] // звʼязок з майстрами
+}
+
+/* Майстри */
+
+model Master {
+  id          Int             @id @default(autoincrement())
+  name        String
+  lastName    String
+  speciality  String?         
+  isActive    Boolean         @default(true)
+  createdAt   DateTime        @default(now())
+
+  services    MasterService[]
+  workDays    MasterWorkDay[]
+  appointments Appointment[]
+}
+
+// звʼязок які майстри які послуги роблять
+model MasterService {
+  id        Int     @id @default(autoincrement())
+  masterId  Int
+  serviceId Int
+
+  master    Master  @relation(fields: [masterId], references: [id])
+  service   Service @relation(fields: [serviceId], references: [id])
+
+  @@unique([masterId, serviceId])
+}
+
+/* Робочі дні майстра */
+
+model MasterWorkDay {
   id        Int      @id @default(autoincrement())
-  email     String   @unique
-  password  String
-  name      String?
-  createdAt DateTime @default(now())
+  masterId  Int
+  date      DateTime 
+  startTime DateTime 
+  endTime   DateTime
+  isDayOff  Boolean  @default(false)
+
+  master    Master   @relation(fields: [masterId], references: [id])
+
+  @@index([masterId, date])
+}
+
+
+/* Бронь */
+
+model Appointment {
+  id         Int               @id @default(autoincrement())
+  userId     Int
+  masterId   Int
+  serviceId  Int
+  startTime  DateTime          // початок візиту
+  endTime    DateTime          // кінець
+  status     AppointmentStatus @default(PENDING)
+  createdAt  DateTime          @default(now())
+  note       String?
+
+  user       User    @relation(fields: [userId], references: [id])
+  master     Master  @relation(fields: [masterId], references: [id])
+  service    Service @relation(fields: [serviceId], references: [id])
+
+  @@index([userId])
+  @@index([masterId, startTime])
 }
