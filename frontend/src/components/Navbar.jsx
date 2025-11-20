@@ -7,7 +7,7 @@ export default function Navbar() {
 
   return (
     <header className="bg-white shadow">
-      <nav className="container mx-auto flex justify-between items-center py-4 min-h-[80px]">
+      <nav className="cont mx-auto flex justify-between items-center py-4 min-h-[80px]">
         <Link to="/" className="text-xl font-semibold">BeautySalon</Link>
         <ul className="flex items-center gap-6">
           <li><Link to="/services">Services</Link></li>
