@@ -13,6 +13,9 @@
   &__wrap {
     display: grid;
     gap: 20px;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
+    @media (max-width: 640px) {
+      grid-template-columns: repeat(1, 1fr);
+    }
   }
 }
