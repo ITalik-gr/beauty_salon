@@ -16,7 +16,7 @@ function ServiceCard({cardClass, card}) {
           <div className="service-card__title">
             {card.name}
           </div>
-          <div className="service-card__descr">
+          <div className="service-card__descr line-clamp-3">
             {card.description}
           </div>
 
