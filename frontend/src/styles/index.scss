@@ -11,6 +11,7 @@
 @import './pages/services-page.scss';
 @import './pages/account-page.scss';
 @import './pages/auth-page.scss';
+@import './pages/admin-page.scss';
 
 html {
     scroll-behavior: smooth;
@@ -92,7 +93,7 @@ body {
     color: #b0a6bd;
     margin-bottom: 2px;
   }
-  input {
+  input, textarea {
     font-weight: 400;
     font-size: 16px;
     color: #383838;
@@ -123,4 +124,10 @@ body {
   font-weight: 500;
   font-size: 20px;
   color: #383838;
+}
+
+.heading-18 {
+  font-size: 18px;
+  color: #383838;
+  font-weight: 500;
 }

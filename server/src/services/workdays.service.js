@@ -68,14 +68,14 @@ function combineDateAndTime(date, timeStr) {
   );
 }
 
-// 🔹 Генерація розкладу по шаблону тижня на діапазон дат
+// Генерація розкладу по шаблону тижня на діапазон дат
 export async function generateMasterWorkDaysForPeriod({
   masterId,
   from,
   to,
   pattern,
 }) {
-  // Перевіримо, що майстер існує
+  // Перевіримо що майстер існує
   const master = await prisma.master.findUnique({
     where: { id: masterId },
   });
@@ -107,7 +107,7 @@ export async function generateMasterWorkDaysForPeriod({
     throw error;
   }
 
-  // Клонуємо дату, щоб не мутувати fromDate
+  // Клонуємо дату щоб не мутувати fromDate
   let current = new Date(
     fromDate.getFullYear(),
     fromDate.getMonth(),
@@ -129,7 +129,7 @@ export async function generateMasterWorkDaysForPeriod({
         : pattern[weekday];
 
     if (config) {
-      // шукємо, чи вже є запис для цього майстра і цієї дати
+      // шукать чи вже є запис для цього майстра і цієї дати
       const existing = await prisma.masterWorkDay.findFirst({
         where: {
           masterId,
@@ -148,7 +148,7 @@ export async function generateMasterWorkDaysForPeriod({
             where: { id: existing.id },
             data: {
               isDayOff: true,
-              // можна занулити часи, якщо хочеш:
+              // занулити часи
               // startTime: existing.startTime,
               // endTime: existing.endTime,
             },
@@ -203,7 +203,7 @@ export async function generateMasterWorkDaysForPeriod({
           });
         }
       } else {
-        // config є, але немає ні isDayOff, ні часу → просто пропускаємо
+        // config є але немає ні isDayOff, ні часу тоді просто пропускаємо
       }
     }
 

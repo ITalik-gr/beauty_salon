@@ -5,6 +5,8 @@ export default function Navbar() {
 
   const { user, logout, loading } = useAuth();
 
+  console.log(user);
+  
   return (
     <header className="bg-white shadow">
       <nav className="cont mx-auto flex justify-between items-center py-4 min-h-[80px]">
@@ -12,7 +14,7 @@ export default function Navbar() {
         <ul className="flex items-center gap-6">
           <li><Link to="/services">Services</Link></li>
           <li><Link to="/profile">Profile</Link></li>
-          <li><Link to="/booking">Booking</Link></li>
+          {user && user.role === 'ADMIN' && <li><Link to="/panel">Admin Panel</Link></li> }
           {!user && <li><Link to="/login">Login</Link></li> }
           {user && <div className="btn" onClick={logout}>Logout</div> }
         </ul>

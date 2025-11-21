@@ -34,26 +34,64 @@ export function getAllServicesAdmin() {
 }
 
 // Створити послугу (ADMIN)
-export function createService(data) {
+export async function createService(data) {
   const {
     name,
     description,
     price,
     durationMin,
     categoryId,
-    imageUrl
+    imageUrl,
+    masterIds,
   } = data;
 
-  return prisma.service.create({
-    data: {
-      name,
-      description: description ?? null,
-      price: Number(price),
-      durationMin: durationMin ? Number(durationMin) : 60,
-      categoryId: categoryId ? Number(categoryId) : null,
-      imageUrl: imageUrl ?? null,
-    },
+  const masterIdsClean = Array.isArray(masterIds)
+    ? masterIds
+        .map((id) => Number(id))
+        .filter((id) => !Number.isNaN(id))
+    : [];
+
+  if (masterIdsClean.length === 0) {
+    const error = new Error("Не передано жодного майстра для послуги");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const result = await prisma.$transaction(async (tx) => {
+    const service = await tx.service.create({
+      data: {
+        name,
+        description: description ?? null,
+        price: Number(price),
+        durationMin: durationMin ? Number(durationMin) : 60,
+        categoryId: categoryId ? Number(categoryId) : null,
+        imageUrl: imageUrl ?? null,
+      },
+    });
+
+    await tx.masterService.createMany({
+      data: masterIdsClean.map((masterId) => ({
+        masterId,
+        serviceId: service.id,
+      })),
+      skipDuplicates: true,
+    });
+
+    const serviceWithMasters = await tx.service.findUnique({
+      where: { id: service.id },
+      include: {
+        masters: {
+          include: {
+            master: true,
+          },
+        },
+      },
+    });
+
+    return serviceWithMasters;
   });
+
+  return result;
 }
 
 // Оновити послугу (ADMIN)

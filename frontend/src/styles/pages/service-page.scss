@@ -97,7 +97,11 @@
     background: #e5e7eb;
     border-radius: 999px;
   }
+  &.disabled {
+    pointer-events: none;
+    opacity: .7;
   }
+}
 
   &__schedule-day {
     flex: 0 0 auto;

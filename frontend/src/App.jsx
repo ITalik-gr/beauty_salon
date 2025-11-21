@@ -7,6 +7,7 @@ import ServicePage from "./pages/ServicePage";
 import AccountPage from "./pages/AccountPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
+import AdminPage from "./pages/AdminPanel";
 
 function App() {
   return (
@@ -17,6 +18,8 @@ function App() {
           <Route path="/services" element={<ServicesPage />} />
           <Route path="/services/:id" element={<ServicePage />} />
           <Route path="/profile" element={<AccountPage />} />
+
+          <Route path="/panel" element={<AdminPage />} />
 
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />

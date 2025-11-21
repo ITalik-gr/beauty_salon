@@ -49,13 +49,20 @@ export async function createService(req, res) {
       price,
       durationMin,
       categoryId,
-      imageUrl,       
+      imageUrl,
+      masterIds,
     } = req.body;
 
     if (!name || price === undefined) {
       return res
         .status(400)
         .json({ message: "Назва і ціна послуги є обов'язковими" });
+    }
+
+    if (!Array.isArray(masterIds) || masterIds.length === 0) {
+      return res
+        .status(400)
+        .json({ message: "Потрібно обрати хоча б одного майстра для послуги" });
     }
 
     const priceNumber = Number(price);
@@ -67,6 +74,12 @@ export async function createService(req, res) {
         .json({ message: "Некоректна ціна послуги" });
     }
 
+    if (durationNumber !== undefined && (Number.isNaN(durationNumber) || durationNumber <= 0)) {
+      return res
+        .status(400)
+        .json({ message: "Некоректна тривалість послуги" });
+    }
+
     const service = await servicesService.createService({
       name,
       description,
@@ -74,6 +87,7 @@ export async function createService(req, res) {
       durationMin: durationNumber,
       categoryId,
       imageUrl,
+      masterIds,
     });
 
     res.status(201).json(service);

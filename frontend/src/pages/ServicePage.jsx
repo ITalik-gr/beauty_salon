@@ -2,17 +2,23 @@ import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import api from "../api/client";
 import serviceImage_1 from "@images/service-img-1.png";
+import { useAuth } from "../context/AuthContext";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
 
 function ServicePage() {
   const { id } = useParams();
+  const { user } = useAuth();
 
   const [service, setService] = useState(null);
   const [masters, setMasters] = useState([]);
   const [selectedMasterId, setSelectedMasterId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const [bookingLoading, setBookingLoading] = useState(false);
+  const [bookingError, setBookingError] = useState("");
+  const [bookingMessage, setBookingMessage] = useState("");
 
   useEffect(() => {
     let isMounted = true;
@@ -61,7 +67,7 @@ function ServicePage() {
     return (
       <div className="service-page">
         <div className="cont">
-          <div className="service-page__not-found">
+          <div className="service-page__not-found mt-5">
             Помилка: {error} <br />
             Service id: <b>{id}</b>
           </div>
@@ -73,7 +79,7 @@ function ServicePage() {
     return (
       <div className="service-page">
         <div className="cont">
-          <div className="service-page__not-found">
+          <div className="service-page__not-found mt-5">
             Послугу з id <b>{id}</b> не знайдено.
           </div>
         </div>
@@ -86,14 +92,60 @@ function ServicePage() {
 
   const selectedMaster = masters.find((m) => m.id === selectedMasterId);
 
-  console.log(service);
-  console.log('Master:');
-  console.log(masters);
-  
-  
+  // створення запису
+  const handleSlotClick = async (dayIndex, slotIndex, slot) => {
+    if (!user) {
+      setBookingError("Спочатку увійдіть в акаунт, щоб записатися.");
+      return;
+    }
+    if (!selectedMaster || !slot.isAvailable) return;
+
+    setBookingLoading(true);
+    setBookingError("");
+    setBookingMessage("");
+
+    try {
+      await api.post("/appointments", {
+        serviceId: service.id,
+        masterId: selectedMaster.id,
+        startTime: slot.startTime, // ISO-строка з бека
+      });
+
+      setBookingMessage(
+        "Запис успішно створено. Очікує підтвердження адміністратора."
+      );
+
+      // локально відмічення слота як зайнятий
+      setMasters((prev) =>
+        prev.map((m) => {
+          if (m.id !== selectedMaster.id) return m;
+          return {
+            ...m,
+            days: m.days.map((d, di) => {
+              if (di !== dayIndex) return d;
+              return {
+                ...d,
+                slots: d.slots.map((s, si) =>
+                  si === slotIndex ? { ...s, isAvailable: false } : s
+                ),
+              };
+            }),
+          };
+        })
+      );
+    } catch (err) {
+      console.error("Error creating appointment:", err);
+      setBookingError(
+        err.response?.data?.message ||
+          "Не вдалося створити запис. Можливо, цей час вже зайнято."
+      );
+    } finally {
+      setBookingLoading(false);
+    }
+  };
 
   return (
-    <div className="service-page">
+    <div className="service-page pb-20">
       <div className="cont">
         <div className="service-page__wrap">
           <div className="service-page__image">
@@ -136,17 +188,32 @@ function ServicePage() {
               </p>
             </div>
 
-            <a href="#schedule" className="service-page__btn btn">
-              Обрати час
-            </a>
+            {user && (
+              <a href="#schedule" className="service-page__btn btn">
+                Обрати час
+              </a>
+            )}
+            {!user && (
+              <div className="text-base">
+                Зареєструйтесь або{" "}
+                <Link to="/login" className="link">
+                  увійдіть
+                </Link>{" "}
+                в акаунт для запису
+              </div>
+            )}
+
+            {selectedMaster && selectedMaster.days.length === 0 && (
+              <div className="service-page__not-found mt-5">
+                У цього майстра поки немає розкладу на найближчі дні.
+              </div>
+            )}
           </div>
         </div>
 
         {masters.length > 1 && (
           <div className="service-page__masters-switch">
-            <div className="heading-20 mb-2">
-              Оберіть майстра
-            </div>
+            <div className="heading-20 mb-2">Оберіть майстра</div>
             <div className="service-page__masters-list">
               {masters.map((m) => (
                 <button
@@ -164,15 +231,31 @@ function ServicePage() {
           </div>
         )}
 
+        {/* повідомлення про створення / помилку */}
+        {(bookingMessage || bookingError) && (
+          <div className="mt-4">
+            {bookingMessage && (
+              <div className="text-sm text-green-600">
+                {bookingMessage}
+              </div>
+            )}
+            {bookingError && (
+              <div className="text-sm text-red-500">
+                {bookingError}
+              </div>
+            )}
+          </div>
+        )}
+
         {selectedMaster && selectedMaster.days.length > 0 && (
-          <div className="service-page__bottom">
+          <div className={`service-page__bottom ${!user ? "disabled" : ""}`}>
             <div className="service-page__bottom-title heading-24 mb-4 mt-5">
               Вільний час з {selectedMaster.name}
             </div>
 
             <div id="schedule" className="service-page__schedule">
-              {selectedMaster.days.map((dayBlock, index) => (
-                <div className="service-page__schedule-day" key={index}>
+              {selectedMaster.days.map((dayBlock, dayIndex) => (
+                <div className="service-page__schedule-day" key={dayIndex}>
                   <div className="service-page__schedule-day-head">
                     <div className="service-page__schedule-day-label">
                       {dayBlock.dayLabel}
@@ -190,22 +273,19 @@ function ServicePage() {
                       </div>
                     )}
 
-                    {dayBlock.slots.map((slot, idx) => (
+                    {dayBlock.slots.map((slot, slotIndex) => (
                       <button
-                        key={idx}
+                        key={slotIndex}
                         type="button"
                         className={`service-page__slot ${
                           slot.isAvailable ? "is-free" : "is-busy"
                         }`}
-                        disabled={!slot.isAvailable}
-                        // TODO: тут далі можна викликати createAppointment
-                        onClick={() => {
-                          console.log(
-                            "Обрано слот:",
-                            slot.startTime,
-                            slot.endTime
-                          );
-                        }}
+                        disabled={
+                          !slot.isAvailable || !user || bookingLoading
+                        }
+                        onClick={() =>
+                          handleSlotClick(dayIndex, slotIndex, slot)
+                        }
                       >
                         {slot.time}
                       </button>
@@ -218,7 +298,7 @@ function ServicePage() {
         )}
 
         {selectedMaster && selectedMaster.days.length === 0 && (
-          <div className="service-page__not-found">
+          <div className="service-page__not-found mt-5">
             У цього майстра поки немає розкладу на найближчі дні.
           </div>
         )}

@@ -73,7 +73,7 @@ model Master {
   appointments Appointment[]
 }
 
-// звʼязок які майстри які послуги роблять
+// звязок які майстри які послуги роблять
 model MasterService {
   id        Int     @id @default(autoincrement())
   masterId  Int

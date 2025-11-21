@@ -15,6 +15,19 @@ function ServicesPage() {
 
   if (loading) return <div>Завантаження послуг...</div>;
 
+  if(services.length === 0) return (
+      <section className="services-page">
+        <div className="cont">
+          <div className="services-page__nav">
+            <h2 className="heading-20">
+              Список послуг наразі пустий :(
+            </h2>
+          </div>
+
+        </div>
+      </section>
+  )
+
   return (
     <>
       <section className="services-page">
