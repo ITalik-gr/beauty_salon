@@ -5,9 +5,7 @@ function ServiceCard({cardClass, card}) {
   return (
     <a href={`/services/${card.id}`} className={`service-card ${cardClass}`}>
       <div className="service-card__image">
-        <img src={card?.imageUrl.startsWith("http")
-                        ? card.imageUrl
-                        : `${import.meta.env.VITE_API_URL || "http://localhost:3001"}${card.imageUrl}`
+        <img src={card?.imageUrl?.startsWith("http") ? card.imageUrl : `${import.meta.env.VITE_API_URL || "http://localhost:3001"}${card.imageUrl}`
                       } alt={card.title} />
       </div>
 
