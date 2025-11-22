@@ -238,6 +238,17 @@ function ServicesTab() {
     }
   };
 
+  const handleDelete = async (id) => {
+    try {
+      await api.delete(`/services/admin/${id}`);
+
+      await fetchServices();
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
+
   console.log(services);
   
 
@@ -382,8 +393,11 @@ function ServicesTab() {
                     <span>•</span>
                     <span>Id: {s.id}</span>
                   </div>
-                  <div className="admin-services__item-status">
+                  <div className={`admin-services__item-status ${s.isActive ? "" : "!bg-red-100"}`}>
                     {s.isActive ? "Active" : "Inactive"}
+                  </div>
+                  <div onClick={() => handleDelete(s.id)} className={`cursor-pointer text-sm mt-3 ${!s.isActive ? '!cursor-not-allowed opacity-80' : ''}`}>
+                    Видалити
                   </div>
                 </div>
               </div>

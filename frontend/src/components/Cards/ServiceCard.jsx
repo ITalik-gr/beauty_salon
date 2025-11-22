@@ -33,5 +33,4 @@ function ServiceCard({cardClass, card}) {
     </a>
   )
 }
-
 export default ServiceCard
